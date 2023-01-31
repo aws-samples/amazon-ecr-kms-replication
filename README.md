@@ -39,7 +39,7 @@ For Cross-Region replication, but within same account, please follow steps below
 7. Under `Stack Name` enter a name for your stack (i.e. "Primary ECR Repo")
 8. Under `Parameters` do the following:
     1. For `ECRDestiationRegion` enter the AWS region you'd like ECR to replicate your images. _This will also be the region where you'll run the second CloudFormation Tempalte._
-    2. For `ECRRepositoryName`, enter the name of the ECR repository. _The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashe_
+    2. For `ECRRepositoryName`, enter the name of the ECR repository. _The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashes_
     3. For `KMSKeyAdmin` enter the IAM Principal ARN that you'd like to be the KMS Admin
     4. For `KMSKeyUser` enter the IAM Principal ARN that you'd like to consume the KMS key (i.e. push/pull images from ECR)
 9. Choose `Next`
@@ -64,7 +64,7 @@ Now, it is very important that before we push any images to our ECR repository t
 6. Choose `Next`
 7. Under `Stack Name` enter a name for your stack (i.e. "Secondary Destination ECR Repo")
 8. Under `Parameters` do the following:
-    1. For `ECRRepositoryName`, enter the name of the ECR repository. _The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashe_ _The name MUST be exactly the same as your primary region, if they don't match, replication with KMS encryption will NOT work_ 
+    1. For `ECRRepositoryName`, enter the name of the ECR repository. _The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashes_ _The name MUST be exactly the same as your primary region, if they don't match, replication with KMS encryption will NOT work_ 
     2. For `KMSKeyAdmin` enter the IAM Principal ARN that you'd like to be the KMS Admin
     3. For `KMSKeyUser` enter the IAM Principal ARN that you'd like to consume the KMS key (i.e. push/pull images from ECR)
 9. Choose `Next`
@@ -94,7 +94,7 @@ For Cross-Region and Cross-Account replication, please follow steps below for de
 7. Under `Stack Name` enter a name for your stack (i.e. "Primary ECR Repo")
 8. Under `Parameters` do the following:
     1. For `ECRDestiationRegion` enter the AWS region you'd like ECR to replicate your images. _This will also be the region where you'll run the second CloudFormation Tempalte._
-    2. For `ECRRepositoryName`, enter the name of the ECR repository. _The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashe_
+    2. For `ECRRepositoryName`, enter the name of the ECR repository. _The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashes_
     3. For `KMSKeyAdmin` enter the IAM Principal ARN that you'd like to be the KMS Admin
     4. For `KMSKeyUser` enter the IAM Principal ARN that you'd like to consume the KMS key (i.e. push/pull images from ECR)
     5. For `DestinationAWSAccount` enter the AWS account that you would like ECR to replicate container images to
