@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  KMSKeyAdmin:
+    Description: IAM ARN Princial For KMS Key administration
+    Type: String
+    Default: arn:aws:iam::444455556666:role/Admin
+  KMSKeyUser:
+    Description: IAM ARN Princial For KMS Key user
+    Type: String
+    Default: arn:aws:iam::444455556666:role/AppUser
+  ECRSourceAWSAccount:
+    Description: AWS Account for ECR Source Replication
+    Type: String
+    AllowedPattern: ^[0-9]*$
+    Default: 111122223333  
+  ECRRepositoryName:
+    Description: 0 out of 256 characters maximum (2 minimum). The name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, periods and forward slashes. ***Names must be identical on both regions for ECR replication to work***
+    Type: String
+    AllowedPattern: ^[a-z0-9]*$
+    MinLength: 2
+    MaxLength: 250
+    Default: myecrrepository
+
+Resources:
+
+  KmsKey:
+    Type: 'AWS::KMS::Key'
+    Properties:
+      Description: ECR KMS Symmetric Key for secondary region and account
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: key-default-1
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action: 'kms:*'
+            Resource: '*'
+          - Sid: Allow administration of the key
+            Effect: Allow
+            Principal:
+              AWS: !Sub '${KMSKeyAdmin}'
+            Action:
+              - 'kms:Create*'
+              - 'kms:Describe*'
+              - 'kms:Enable*'
+              - 'kms:List*'
+              - 'kms:Put*'
+              - 'kms:Update*'
+              - 'kms:Revoke*'
+              - 'kms:Disable*'
+              - 'kms:Get*'
+              - 'kms:Delete*'
+              - 'kms:ScheduleKeyDeletion'
+              - 'kms:CancelKeyDeletion'
+            Resource: '*'
+          - Sid: Allow use of the key
+            Effect: Allow
+            Principal:
+              AWS: !Sub '${KMSKeyAdmin}'
+            Action:
+              - 'kms:DescribeKey'
+              - 'kms:Encrypt'
+              - 'kms:Decrypt'
+              - 'kms:ReEncrypt*'
+              - 'kms:GenerateDataKey'
+              - 'kms:GenerateDataKeyWithoutPlaintext'
+            Resource: '*'
+  
+
+  EcrRepository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: !Ref ECRRepositoryName
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: "IMMUTABLE"
+      EncryptionConfiguration:
+        EncryptionType: KMS
+        KmsKey: !Ref KmsKey
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W28
+            reason: "ECR Respository name need to be identical between region and/or account for the ECR replication to work."
+
+
+  ECRRegistryPolicy:
+      Type: 'AWS::ECR::RegistryPolicy'
+      Properties:
+        PolicyText:
+          Version: 2012-10-17
+          Statement:
+            - Sid: AllowCrossAccountReplication
+              Effect: Allow
+              Principal:
+                AWS: !Sub 'arn:aws:iam::${ECRSourceAWSAccount}:root'
+              Action:
+                - 'ecr:CreateRepository'
+                - 'ecr:ReplicateImage'
+              Resource: !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*'
