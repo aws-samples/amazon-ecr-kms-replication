@@ -49,7 +49,7 @@ For Cross-Region replication, but within same account, please follow steps below
 
 
 ### Secondary Region
-Now, it is very important that before we push any images to our ECR repository that we create the ECR repository in our secondary/destination region. 
+Now, it is very important that before we push any images to our ECR repository that we create the ECR repository in our secondary region. 
 
 **_Do NOT push an image to your primary repository before following steps below. If you push an image to the primary ECR repository region without creating the ECR repository destination, the ECR destination repository will NOT have KMS encyrption)_** 
 1. Clone this Git repository to your local machine (if you haven't already done)
