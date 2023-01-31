@@ -1,6 +1,6 @@
 # ECR KMS Replication Automation
 
-In this GitHub repository, we will provide step by step guidance to deploy a Amazon CloudFormation (CFN) template to automatically create all the resources and settings required to enable KMS encryption on Amazon Elastic Container Registry (ECR) with cross-region and/or cross-account replication. 
+In this GitHub repository, we will provide step by step guidance to deploy a Amazon CloudFormation (CFN) template to automatically create all the resources and settings required to enable KMS encryption on Amazon Elastic Container Registry (ECR) with cross-region or cross-account replication. 
 
 # Table of Contents
 
